@@ -9,7 +9,7 @@ import consola from 'consola';
 // importing other stuff
 import connectToDb from './utils/db';
 import { corsConfig } from './config';
-import indexRouter from './routes';
+import indexRouter from './routes/v1';
 
 import { errorLogger, errorHandler, invalidPathHandler } from './middlewares';
 
@@ -22,7 +22,7 @@ async function start() {
   app.use(cors(corsConfig));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
-  app.use('/', indexRouter);
+  app.use('/api/v1', indexRouter);
   app.use(invalidPathHandler);
   app.use(errorLogger);
   app.use(errorHandler);
