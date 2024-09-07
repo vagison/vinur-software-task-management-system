@@ -8,6 +8,7 @@ import { generatePaginatedRes, paginate } from '../utils/pagination';
 const create = async (req, res, next) => {
   try {
     const data = req.body;
+    delete data.createdAt;
     const task = await Task.create(data);
 
     return res.status(201).json({ message: responseMessagesConstants.Task.Created, task });
@@ -70,30 +71,34 @@ const updateStatus = async (req, res, next) => {
 
 const markTasksCompletion = async (req, res, next) => {
   try {
-    const completed = req.body.completed === true;
+    const completedAt = req.body.completedAt ? new Date(req.body.completedAt) : false;
 
     const filter = {
       _id: {
         $in: req.body.tasks,
       },
+      ...(completedAt ? { createdAt: { $lte: completedAt } } : {}),
     };
 
-    const updateData = {
-      $set: { completed },
-      $unset: {},
-    };
+    let updateData = { };
 
-    if (!completed) {
-      updateData.$unset = {
-        finishedAt: '',
+    if (!completedAt) {
+      updateData = {
+        $unset: {
+          completedAt: '',
+        },
       };
     } else {
-      updateData.$set.finishedAt = Date.now();
+      updateData = {
+        $set: {
+          completedAt,
+        },
+      };
     }
 
     await Task.updateMany(filter, updateData);
 
-    return res.status(200).json({ message: completed ? responseMessagesConstants.Task.MarkAsCompleted : responseMessagesConstants.Task.MarkAsNotCompleted });
+    return res.status(200).json({ message: completedAt ? responseMessagesConstants.Task.MarkAsCompleted : responseMessagesConstants.Task.MarkAsNotCompleted });
   } catch (error) {
     next(error);
   }

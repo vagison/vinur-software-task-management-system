@@ -24,14 +24,14 @@ const generate = async (req, res, next) => {
     };
 
     if (reportPeriodStart) {
-      criteria.finishedAt = {
+      criteria.completedAt = {
         $gte: new Date(reportPeriodStart),
       };
       report.periodStart = reportPeriodStart;
     }
 
     if (reportPeriodEnd) {
-      criteria.finishedAt = {
+      criteria.completedAt = {
         $lte: new Date(reportPeriodEnd),
       };
       report.periodEnd = reportPeriodEnd;
@@ -44,12 +44,9 @@ const generate = async (req, res, next) => {
       report.assignedMember = assignedMember;
     }
 
-    const completedTasksCount = await Task.countDocuments({
+    report.completedTasks = await Task.countDocuments({
       ...criteria,
-      completed: true,
     });
-
-    report.completedTasks = completedTasksCount;
 
     const average = await Task.aggregate([
       {
@@ -58,7 +55,7 @@ const generate = async (req, res, next) => {
       {
         $addFields: {
           timeDifference: {
-            $subtract: ['$finishedAt', '$createdAt'],
+            $subtract: ['$completedAt', '$createdAt'],
           },
         },
       },

@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-// defining model schema
 const TaskSchema = new mongoose.Schema(
   {
     title: {
@@ -27,15 +26,11 @@ const TaskSchema = new mongoose.Schema(
       type: String,
       default: 'not started',
     },
-    completed: {
-      type: Boolean,
-      default: false,
-    },
     createdAt: {
       type: Date,
       default: Date.now,
     },
-    finishedAt: {
+    completedAt: {
       type: Date,
     },
   },
@@ -55,7 +50,6 @@ const TaskSchema = new mongoose.Schema(
   },
 );
 
-// creating model
 const Task = mongoose.model('Task', TaskSchema);
 
 export default Task;

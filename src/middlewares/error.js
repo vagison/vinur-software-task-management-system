@@ -11,7 +11,6 @@ function errorHandler(error, req, res, _) {
   let statusCode = error.status || 500;
   let message = error.message || 'Something went wrong';
 
-  // TODO: improve
   if (message.startsWith('Cast to ObjectId') || message.startsWith('Argument passed in must be a string of 12 bytes')) {
     statusCode = 404;
     message = 'Resource not found';
