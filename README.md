@@ -44,9 +44,10 @@ There are some files in the root directory apart from the src folder:
 * .env.dist - serves as a template for environment variables, providing a sample configuration for the .env file.
 * .eslintrc.json - contains configuration settings for ESLint, which is used to identify and fix problems in JavaScript code.
 * .gitignore - used to exclude files from being pushed to the repository.
+* nodemon.json - configures Nodemon to restart your Node.js app on file changes; customize file watches, ignores, and more.
 * package-lock.json - records the exact versions of packages and their dependencies that were installed, ensuring consistent installs across different environments.
 * package.json - includes a list of the packages and their versions used for this project.
-
+* README.md - contains the instruction you are currently reading :D
 
 Server-side entities
 ---------------------
