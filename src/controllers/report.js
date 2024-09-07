@@ -2,7 +2,7 @@ import createHttpError from 'http-errors';
 import { Task } from '../models';
 import { errorMessagesConstants } from '../constants';
 
-const get = async (req, res, next) => {
+const generate = async (req, res, next) => {
   try {
     const reportPeriodStart = req.query.periodStart;
     const reportPeriodEnd = req.query.periodEnd;
@@ -85,4 +85,4 @@ const get = async (req, res, next) => {
   }
 };
 
-export { get };
+export { generate };
