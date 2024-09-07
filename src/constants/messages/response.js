@@ -1,6 +1,8 @@
 const constants = {
   Task: {
-    created: 'Task successfully created',
+    Created: 'Task successfully created',
+    StatusUpdated: 'Task status updated successfully',
+    MarkAsCompleted: 'Specified tasks have been marked as completed',
   },
 };
 
