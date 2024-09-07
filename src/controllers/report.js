@@ -17,7 +17,11 @@ const get = async (req, res, next) => {
     }
 
     const criteria = {};
-    const report = {};
+    const report = {
+      periodStart: 'not specified',
+      periodEnd: 'not specified',
+      assignedMember: 'not specified',
+    };
 
     if (reportPeriodStart) {
       criteria.finishedAt = {
