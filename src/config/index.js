@@ -7,4 +7,9 @@ const dbConfig = {
   isDebugEnabled: process.env.DB_DEBUG === 'true',
 };
 
-export { dbConfig };
+const corsConfig = {
+  origin: '*',
+  credentials: true,
+};
+
+export { dbConfig, corsConfig };
