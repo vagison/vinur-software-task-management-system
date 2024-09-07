@@ -3,6 +3,7 @@ import createHttpError from 'http-errors';
 import { Task } from '../models';
 
 import { errorMessagesConstants, responseMessagesConstants } from '../constants';
+import { generatePaginatedRes, paginate } from '../utils/pagination';
 
 const create = async (req, res, next) => {
   try {
@@ -15,7 +16,7 @@ const create = async (req, res, next) => {
   }
 };
 
-const get = async (req, res, next) => {
+const getTaskById = async (req, res, next) => {
   try {
     const task = await Task.findById(req.params.id);
 
@@ -24,6 +25,27 @@ const get = async (req, res, next) => {
     }
 
     return res.status(200).json({ task });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getTasks = async (req, res, next) => {
+  try {
+    const pagination = paginate(req);
+
+    const tasks = await Task
+      .find()
+      .skip(pagination.offset)
+      .limit(pagination.limit);
+
+    const results = generatePaginatedRes(tasks, {
+      total: await Task.countDocuments(),
+      page: pagination.page,
+      limit: pagination.limit,
+    });
+
+    return res.status(200).json(results);
   } catch (error) {
     next(error);
   }
@@ -46,23 +68,37 @@ const updateStatus = async (req, res, next) => {
   }
 };
 
-const markTasksCompleted = async (req, res, next) => {
+const markTasksCompletion = async (req, res, next) => {
   try {
+    const completed = req.body.completed === true;
+
     const filter = {
-      _id:
-        { $in: req.body.tasks },
+      _id: {
+        $in: req.body.tasks,
+      },
     };
 
-    await Task.updateMany(filter, {
-      $set: { completed: true },
-    });
+    const updateData = {
+      $set: { completed },
+      $unset: {},
+    };
 
-    return res.status(200).json({ message: responseMessagesConstants.Task.MarkAsCompleted });
+    if (!completed) {
+      updateData.$unset = {
+        finishedAt: '',
+      };
+    } else {
+      updateData.$set.finishedAt = Date.now();
+    }
+
+    await Task.updateMany(filter, updateData);
+
+    return res.status(200).json({ message: completed ? responseMessagesConstants.Task.MarkAsCompleted : responseMessagesConstants.Task.MarkAsNotCompleted });
   } catch (error) {
     next(error);
   }
 };
 
 export {
-  create, get, updateStatus, markTasksCompleted,
+  create, getTaskById, getTasks, updateStatus, markTasksCompletion,
 };

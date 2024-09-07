@@ -3,9 +3,13 @@ import { taskController } from '../../controllers';
 
 const taskRouter = express.Router();
 
-taskRouter.post('/create/', taskController.create);
-taskRouter.get('/details/:id', taskController.get);
-taskRouter.patch('/updateStatus/:id', taskController.updateStatus);
-taskRouter.patch('/markCompleted', taskController.markTasksCompleted);
+// single resource
+taskRouter.post('/', taskController.create);
+taskRouter.get('/:id', taskController.getTaskById);
+taskRouter.patch('/:id/update-status', taskController.updateStatus);
+
+// multiple resources
+taskRouter.get('/', taskController.getTasks);
+taskRouter.post('/mark-complete', taskController.markTasksCompletion);
 
 export default taskRouter;
