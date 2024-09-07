@@ -4,7 +4,11 @@
   "description": "Task Management System for Vinur Software (test task)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/app.js",
+    "dev": "nodemon --exec babel-node ./src/app.js",
+    "build": "npm run clean && babel ./src --out-dir dist --copy-files",
+    "clean": "rm -rf dist",
+    "lint": "eslint"
   },
   "keywords": [],
   "author": "",
